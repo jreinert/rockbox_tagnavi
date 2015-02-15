@@ -10,6 +10,12 @@ io.each do |line|
   if line =~ /^\s*#\s*PATHFILTER:\s*"(.*?)"/
     active_filters = $1.split('|')
   end
+
+  if (active_filters - ['NONE']).empty?
+    puts line
+    next
+  end
+
   puts line.chomp.sub(regex) {|string|
     match = Regexp.last_match
     modified_line = string
