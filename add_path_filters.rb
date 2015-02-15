@@ -22,7 +22,7 @@ io.each do |line|
     head = match[:head]
     mid = match[:mid]
     condition = match[:condition]
-    if line !~ /# PATHFILTER APPLIED$/
+    if line !~ /# PATHFILTER.*?APPLIED$/
       replacement = "? "
       if condition
         ors = condition.split(/\s+\|\s+/).map { |part| part.split(/\s+&\s+/) }
@@ -42,7 +42,7 @@ io.each do |line|
       else
         modified_line.sub!(head, head + " #{replacement}")
       end
-      modified_line << " # PATHFILTER APPLIED"
+      modified_line << " # PATHFILTER #{active_filters.join('|')} APPLIED"
     end
     modified_line
   }
