@@ -20,6 +20,9 @@ export build_dir
 subdirs := $(shell find $(CURDIR) -maxdepth 1 -type d -not \( -wholename $(CURDIR) -or -wholename $(build_dir)/.git \))
 submenu_builds := $(addsuffix /.built.config,$(subdirs))
 
+formats.config:
+	$(Q)touch $@
+
 .built.config: submenus formats.config $(submenu_builds) .pathfilter menu.config
 	$(Q)echo '#! rockbox/tagbrowser/2.0' > $(CURDIR)/$@
 	$(Q)cat $(realpath $^) | ruby $(build_dir)/add_path_filters.rb | sed '/^#/d' >> $(CURDIR)/$@
@@ -29,5 +32,4 @@ submenu_builds := $(addsuffix /.built.config,$(subdirs))
 
 submenus:
 	$(Q)$(foreach dir,$(subdirs),cp Makefile $(dir)/ &&) true
-	$(Q)$(foreach dir,$(subdirs),touch $(dir)/formats.config &&) true
 	$(Q)$(foreach dir,$(subdirs),$(MAKE) -C $(dir) .built.config &&) true
