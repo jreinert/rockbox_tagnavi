@@ -1,6 +1,12 @@
 regex = /(?<head>->.*?)\s*(?<mid>\?\s+(?<condition>.*?(?=->|$))|->|$)(?<tail>.*$)/
 active_filters = []
-$stdin.each do |line|
+
+io = $stdin
+if ARGV[0]
+  io = File.open(ARGV[0])
+end
+
+io.each do |line|
   if line =~ /^\s*#\s*PATHFILTER:\s*"(.*?)"/
     active_filters = $1.split('|')
   end
@@ -30,3 +36,5 @@ $stdin.each do |line|
     modified_line
   }
 end
+
+io.close
