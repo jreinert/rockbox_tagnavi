@@ -7,7 +7,7 @@ tagnavi_custom.config: .built.config
 clean:
 	find -name '.built.config' -delete
 
-subdirs := $(shell find $(CURDIR) -maxdepth 1 -type d -not -wholename $(CURDIR))
+subdirs := $(shell find $(CURDIR) -maxdepth 1 -type d -not -wholename $(CURDIR) -wholename .git/)
 submenu_builds := $(addsuffix /.built.config,$(subdirs))
 build_dir ?= $(CURDIR)
 export build_dir
