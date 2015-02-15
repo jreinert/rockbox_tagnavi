@@ -1,3 +1,4 @@
 .built.config
 tagnavi_custom.config
 */**/Makefile
+.pathfilter

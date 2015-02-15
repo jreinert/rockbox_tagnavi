@@ -1,6 +1,6 @@
 all: tagnavi_custom.config
 tagnavi_custom.config: .built.config
-	@cp $< $@
+	@cat $< | ruby -e '$$stdin.each {|l| puts l.sub(/(?<!^)\s*#.*$$/,"")}' > $@
 	@echo >> $@
 	@echo '%root_menu "my_custom_menu"' >> $@
 	@echo "Done! Move tagnavi_custom.config to /.rockbox/ on your player"
@@ -13,9 +13,12 @@ submenu_builds := $(addsuffix /.built.config,$(subdirs))
 build_dir ?= $(CURDIR)
 export build_dir
 
-.built.config: submenus formats.config $(submenu_builds) menu.config
+.built.config: submenus formats.config $(submenu_builds) .pathfilter menu.config
 	@echo '#! rockbox/tagbrowser/2.0' > $(CURDIR)/$@
 	@cat $(realpath $^) | ruby $(build_dir)/add_path_filters.rb | sed '/^#/d' >> $(CURDIR)/$@
+
+.pathfilter:
+	@echo 'Please run `./generate_path_filters.rb`' && false
 
 submenus:
 	@$(foreach dir,$(subdirs),cp Makefile $(dir)/ &&) true
