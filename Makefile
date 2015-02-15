@@ -14,10 +14,11 @@ tagnavi_custom.config: .built.config
 clean:
 	$(Q)find -name '.built.config' -delete
 
-subdirs := $(shell find $(CURDIR) -maxdepth 1 -type d -not -wholename $(CURDIR) -wholename .git/)
-submenu_builds := $(addsuffix /.built.config,$(subdirs))
 build_dir ?= $(CURDIR)
 export build_dir
+
+subdirs := $(shell find $(CURDIR) -maxdepth 1 -type d -not \( -wholename $(CURDIR) -or -wholename $(build_dir)/.git \))
+submenu_builds := $(addsuffix /.built.config,$(subdirs))
 
 .built.config: submenus formats.config $(submenu_builds) .pathfilter menu.config
 	$(Q)echo '#! rockbox/tagbrowser/2.0' > $(CURDIR)/$@
